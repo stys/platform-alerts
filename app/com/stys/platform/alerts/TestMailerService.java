@@ -6,6 +6,7 @@ import org.apache.commons.mail.Email;
 import play.Configuration;
 import play.Logger;
 
+import javax.inject.Inject;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.Arrays;
@@ -18,7 +19,8 @@ public class TestMailerService extends MainMailerService {
     private static final String TO_KEY = "test.to";
 
     private InternetAddress _receiver;
-    
+
+    @Inject
     public TestMailerService(Application application) {
         super(application);
         this.application = application;

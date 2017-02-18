@@ -9,6 +9,7 @@ import play.Plugin;
 import play.libs.Akka;
 import scala.concurrent.duration.FiniteDuration;
 
+import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
 
 /** Mailer plugin */
@@ -41,6 +42,7 @@ public class MainMailerService extends Plugin implements MailerService {
     private String _from;
 
     /** Conventional plugin constructor */
+    @Inject
     public MainMailerService(Application application) {
 
         // Read configuration

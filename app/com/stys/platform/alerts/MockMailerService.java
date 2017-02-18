@@ -4,6 +4,7 @@ import org.apache.commons.mail.Email;
 import play.Application;
 import play.Plugin;
 
+import javax.inject.Inject;
 import javax.mail.internet.InternetAddress;
 
 /**
@@ -12,11 +13,10 @@ import javax.mail.internet.InternetAddress;
 public class MockMailerService extends Plugin implements MailerService {
 
     /** Conventional plugin constructor */
+    @Inject
     public MockMailerService(Application application) {
-
         // Log plugin startup
         play.Logger.info("Picked {}", this.getClass().getSimpleName());
-        
     }
 
     /** Send email using connection settings */

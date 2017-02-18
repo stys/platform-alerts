@@ -5,6 +5,8 @@ import play.Logger;
 import play.Play;
 import play.Plugin;
 
+import javax.inject.Inject;
+
 /** Alerts API */
 public class Alerts extends Plugin {
 
@@ -12,6 +14,7 @@ public class Alerts extends Plugin {
     private Application application;
 
     /** Plugin constructor */
+    @Inject
     public Alerts(Application application) {
         this.application = application;
         Logger.info("Picked {}", Alerts.class.getSimpleName());
