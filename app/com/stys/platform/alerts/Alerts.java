@@ -6,8 +6,9 @@ import play.Play;
 import play.Plugin;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-/** Alerts API */
+@Singleton
 public class Alerts extends Plugin {
 
     /** Instance of application */

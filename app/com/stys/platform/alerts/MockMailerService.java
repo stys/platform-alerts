@@ -5,11 +5,10 @@ import play.Application;
 import play.Plugin;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.mail.internet.InternetAddress;
 
-/**
- * Maock mailer plugin
- */
+@Singleton
 public class MockMailerService extends Plugin implements MailerService {
 
     /** Conventional plugin constructor */

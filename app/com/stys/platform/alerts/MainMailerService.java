@@ -10,9 +10,10 @@ import play.libs.Akka;
 import scala.concurrent.duration.FiniteDuration;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 
-/** Mailer plugin */
+@Singleton
 public class MainMailerService extends Plugin implements MailerService {
 
     protected static final String MAILER_KEY = "com.stys.platform.alerts.mailer";
