@@ -9,6 +9,9 @@ import play.Plugin;
 import play.libs.Akka;
 import scala.concurrent.duration.FiniteDuration;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /** Mailer plugin */
@@ -21,6 +24,9 @@ public class MainMailerService extends Plugin implements MailerService {
     private static final String PASSWORD_KEY = "password";
     private static final String SSL_KEY = "ssl";
     private static final String FROM_KEY = "from";
+    private static final String TO_KEY = "test.to";
+
+    private Application application;
     
     /** SMTP host */
     private String _host;
@@ -40,8 +46,13 @@ public class MainMailerService extends Plugin implements MailerService {
     /** Sender email */
     private String _from;
 
+    /** Receiver for dev mode */
+    private InternetAddress _receiver;
+
     /** Conventional plugin constructor */
     public MainMailerService(Application application) {
+
+        this.application = application;
 
         // Read configuration
         Configuration conf = application.configuration().getConfig(MAILER_KEY);
@@ -51,7 +62,17 @@ public class MainMailerService extends Plugin implements MailerService {
         this._password = conf.getString(PASSWORD_KEY);
         this._ssl = conf.getBoolean(SSL_KEY);
         this._from = conf.getString(FROM_KEY);
-        
+
+        /** Check mode and fill receiver */
+        if(application.isDev()) {
+            String email = conf.getString(TO_KEY);
+            try {
+                this._receiver = new InternetAddress(email);
+            } catch (AddressException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
         // Log plugin startup
         play.Logger.info("Picked {}", this.getClass().getSimpleName());
         
@@ -67,13 +88,23 @@ public class MainMailerService extends Plugin implements MailerService {
         email.setAuthentication(this._user, this._password);
         email.setSSLOnConnect(this._ssl);
         email.setCharset(EmailConstants.UTF_8);
-        
+
+        // Set sender-email
         try {
             email.setFrom(this._from);
         } catch (EmailException ex) {
             play.Logger.error("Error sending email", ex);
         }
-        
+
+        // Set receiver-email if the mode is dev
+        if(application.isDev()) {
+            try {
+                email.setTo(Arrays.asList(this._receiver));
+            } catch (EmailException ex) {
+                play.Logger.error("Error setting receiver email", ex);
+            }
+        }
+
         // Async send
          Akka.system().scheduler().scheduleOnce(
             new FiniteDuration(1L, TimeUnit.SECONDS),
